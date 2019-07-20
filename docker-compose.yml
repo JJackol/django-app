@@ -10,7 +10,36 @@ services:
       - "8000"
     volumes:
       - ./app:/app
-    command: >
-      sh -c "python core_app/manage.py runserver 0.0.0.0:8000"
-  # db:
-  #   image: mariadb
+    # environment:
+    #   SERVICE_PRECONDITION: "db:3306"
+    command: 
+       ["core_app/manage.py", "runserver", "0.0.0.0:8000"]
+    depends_on:
+      - db
+      
+
+
+  db:
+    image: mariadb
+    volumes:
+      - ./db:/db
+    ports:
+        - "3306:3306"
+    expose:
+        - "3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: "1234"
+        MYSQL_DATABASE: db
+        MYSQL_USER: "mariadb_user"
+        MYSQL_PASSWORD: "mariadb_pass"
+    healthcheck:
+        interval: 5s
+        retries: 100 
+    # volumes:
+    #   - ./mariadb:/var/lib/mysql
+
+  redis:
+    image: redis
+
+
+# -- docker-compose exec db mysqldump db > db/backup-file.sql -u root --password=1234
