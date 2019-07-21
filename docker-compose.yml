@@ -23,6 +23,7 @@ services:
     image: mariadb
     volumes:
       - ./db:/db
+      - ./mariadb
     ports:
         - "3306:3306"
     expose:
@@ -43,3 +44,4 @@ services:
 
 
 # -- docker-compose exec db mysqldump db > db/backup-file.sql -u root --password=1234
+# mysql> source db/backup-file.sql
